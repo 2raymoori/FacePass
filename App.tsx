@@ -6,10 +6,7 @@
  */
 
 
-import {
-  StatusBar,
-  useColorScheme
-} from 'react-native';
+import { StatusBar, StyleSheet, useColorScheme } from 'react-native';
 
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
@@ -21,10 +18,17 @@ function App() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView>
+      <SafeAreaView style={styles.container}>
         <AuthScreen />
       </SafeAreaView>
     </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#132440',
+  },
+});
 export default App;
