@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 36,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 export default TextLayer1;

@@ -9,6 +9,7 @@ import {
 import TextLayer1 from '../Components/TextLayer1.tsx';
 import TextLayer3 from '../Components/TextLayer3.tsx';
 import TextLayer2 from '../Components/TextLayer2.tsx';
+import VerificationActionButton from '../Components/VerificationActionButton.tsx';
 
 const AuthScreen: React.FC = () => {
   return (
@@ -35,11 +36,9 @@ const AuthScreen: React.FC = () => {
           <TextLayer3 text="Mon, 22nd Dec" />
         </View>
       </View>
-      <View style={{paddingHorizontal: 30}}>
-        <TouchableOpacity style={styles.scanBtn}>
-          <Text style={styles.scanBtnText}>Start Facial Pass</Text>
-        </TouchableOpacity>
-      </View>
+
+      <VerificationActionButton label={"Start Facial Pass"} />
+
     </View>
   );
 }

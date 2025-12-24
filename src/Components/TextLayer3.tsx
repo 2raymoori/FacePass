@@ -13,9 +13,10 @@ const TextLayer3 = ({ text }: ITextProps) => {
 const styles = StyleSheet.create({
   textStyle: {
     color: 'white',
-    opacity:0.5,
+    opacity: 0.5,
     fontSize: 20,
     fontWeight: 'normal',
+    textAlign: 'center',
   },
 });
 export default TextLayer3;

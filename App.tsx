@@ -12,6 +12,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import Camra from './src/Camra.tsx';
 import AuthScreen from './src/Screens/Auth_Screen.tsx';
+import VerifryScreen from './src/Screens/Verify_Screen.tsx';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -19,7 +20,7 @@ function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <AuthScreen />
+        <VerifryScreen />
       </SafeAreaView>
     </SafeAreaProvider>
   );
