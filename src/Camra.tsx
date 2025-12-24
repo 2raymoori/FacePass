@@ -4,13 +4,11 @@ import {
   useCameraDevice,
 } from 'react-native-vision-camera';
 import { PermissionsAndroid, Platform } from 'react-native';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import TextLayer1 from './Components/TextLayer1.tsx';
 import TextLayer2 from './Components/TextLayer2.tsx';
 import TextLayer3 from './Components/TextLayer3.tsx';
 import VerificationActionButton from './Components/VerificationActionButton.tsx';
-
-
 
 const Camra = ()=>{
   useEffect(()=>{
@@ -20,7 +18,13 @@ const Camra = ()=>{
   },[])
 
 
+  const camera = useRef<Camera>(null)
   const device = useCameraDevice('front');
+  const takePicture = async () => {
+    const photo = await camera.current.takePhoto();
+    console.log(photo)
+  };
+
   return (
     <View style={styles.mainContainer}>
       <View >
@@ -35,10 +39,10 @@ const Camra = ()=>{
       </View>
 
       <View style={styles.cameraContainer}>
-        <Camera  style={styles.camera} device={device} isActive={true} />
+        <Camera  style={styles.camera} device={device} isActive={true} photo={true} ref={camera} />
       </View>
 
-      <VerificationActionButton label={'Clock In'} />
+      <VerificationActionButton onPress={takePicture} label={'Clock In'} />
     </View>
   );
 }

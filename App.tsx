@@ -20,7 +20,7 @@ function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <VerifryScreen />
+        <Camra />
       </SafeAreaView>
     </SafeAreaProvider>
   );

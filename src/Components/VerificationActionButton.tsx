@@ -1,12 +1,13 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface IVerificationActionButtonProps {
-  label: string
+  label: string,
+  onPress: () => void,
 }
-const VerificationActionButton = ({label}:IVerificationActionButtonProps)=>{
+const VerificationActionButton = ({label,onPress}:IVerificationActionButtonProps)=>{
   return (
     <View style={{ paddingHorizontal: 30 }}>
-      <TouchableOpacity style={styles.scanBtn}>
+      <TouchableOpacity style={styles.scanBtn} onPress={onPress}>
         <Text style={styles.scanBtnText}>{label}</Text>
       </TouchableOpacity>
     </View>
