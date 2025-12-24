@@ -5,13 +5,16 @@ import {
 } from 'react-native-vision-camera';
 import { PermissionsAndroid, Platform } from 'react-native';
 import { useEffect } from 'react';
+import TextLayer1 from './Components/TextLayer1.tsx';
+import TextLayer2 from './Components/TextLayer2.tsx';
+import TextLayer3 from './Components/TextLayer3.tsx';
+import VerificationActionButton from './Components/VerificationActionButton.tsx';
 
 
 
 const Camra = ()=>{
   useEffect(()=>{
     requestCameraPermission().then(() =>{
-
     } ).catch(()=>{
       console.log('Permissions denied')});
   },[])
@@ -19,8 +22,23 @@ const Camra = ()=>{
 
   const device = useCameraDevice('front');
   return (
-    <View style={styles.camraContainer}>
-      <Camera style={StyleSheet.absoluteFill} device={device} isActive={true} />
+    <View style={styles.mainContainer}>
+      <View >
+        <View style={{marginBottom:40,marginTop:50}}>
+          <TextLayer2 text={'Verify Identity'} />
+        </View>
+
+        <View style={{gap:15}}>
+          <TextLayer1 text={'Position face in frame'} />
+          <TextLayer3 text={'Make sure there is enough light'} />
+        </View>
+      </View>
+
+      <View style={styles.cameraContainer}>
+        <Camera  style={styles.camera} device={device} isActive={true} />
+      </View>
+
+      <VerificationActionButton label={'Clock In'} />
     </View>
   );
 }
@@ -40,11 +58,22 @@ async function requestCameraPermission() {
 }
 
 const styles = StyleSheet.create({
-  camraContainer:{
-    height: "100%",
-    width: "100%"
-  }
-})
+  mainContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+    paddingBottom: 20,
+  },
+  cameraContainer: {
+    justifyContent: 'center',
+    alignItems:"center",
+    height:500,
+    paddingHorizontal:50,
+},
+  camera: {
+    height: 300,
+    width: "100%",
+  },
+});
 
 
 export default Camra;
