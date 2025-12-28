@@ -1,12 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 interface ITextProps {
-  text: string;
+  text: string
+  centerAlign?: boolean
 }
-const TextLayer3 = ({ text }: ITextProps) => {
+const TextLayer3 = ({ text, centerAlign = true }: ITextProps) => {
   return (
     <View>
-      <Text style={styles.textStyle}>{text}</Text>
+      <Text style={[styles.textStyle, { textAlign: centerAlign ? 'center' : 'left' }]}>{text}</Text>
     </View>
   );
 };
