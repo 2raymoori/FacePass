@@ -37,7 +37,7 @@ const AuthScreen: React.FC = () => {
         </View>
       </View>
 
-      <VerificationActionButton label={"Start Facial Pass"} />
+      <VerificationActionButton onPress={()=>{console.log("This is a logging...")}} label={"Start Facial Pass"} />
 
     </View>
   );
@@ -61,11 +61,11 @@ const styles = StyleSheet.create({
   logo: {
     height: 120,
     width: 120,
-    borderRadius:10,
-    elevation:1,
+    borderRadius: 10,
+    elevation: 1,
   },
   scanBtn: {
-    borderRadius:10,
+    borderRadius: 10,
     shadowColor: 'black',
     width: '100%',
     justifyContent: 'center',
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-  layer:{
+  layer: {
     justifyContent: 'center',
     alignItems: 'center',
 
