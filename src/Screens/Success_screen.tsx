@@ -9,7 +9,7 @@ const SuccessScreen = () => {
     return (
         <View style={styles.container}>
 
-            <View>
+            <View style={styles.row1}>
 
                 <FontAwesome6 name="circle-check" color={'green'} size={100} iconStyle="solid" />
                 <TextLayer3 text={'Clock-in Successful'} />
@@ -25,7 +25,7 @@ const SuccessScreen = () => {
             </View>
 
             <View style={styles.row3}>
-                <FontAwesome6 name="circle-check" color={'green'} size={100} iconStyle="solid" />
+                <FontAwesome6 name="user" color={'green'} size={100} iconStyle="solid" />
                 <View>
                     <TextLayer2 text="Welcome back, Alex!" />
                     <TextLayer3 centerAlign={false} text="Fullstack Engineer" />
@@ -38,14 +38,16 @@ const SuccessScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
+        marginTop: 40,
         flex: 1,
-        borderColor: 'white',
-        borderWidth: 1,
+    },
+    row1: {
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        gap: 15,
     },
     row2: {
         marginTop: 20,
-        borderColor: 'white',
-        borderWidth: 1,
         flexDirection: 'row',
         alignItems: 'center',
         padding: 20,
@@ -53,11 +55,9 @@ const styles = StyleSheet.create({
     },
     row3: {
         marginTop: 40,
-        borderColor: 'white',
-        borderWidth: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 20,
+        paddingHorizontal: 10,
         gap: 15,
     }
 });

@@ -14,6 +14,7 @@ import Camra from './src/Camra.tsx';
 import AuthScreen from './src/Screens/Auth_Screen.tsx';
 import VerifryScreen from './src/Screens/Verify_Screen.tsx';
 import SuccessScreen from './src/Screens/Success_screen.tsx';
+import ErrorScreen from './src/Screens/Error_Screen.tsx';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -21,9 +22,9 @@ function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <SuccessScreen />
+        <ErrorScreen />
         {
-          //<AuthScreen />
+          //<AuthScreen /> <SuccessScreen />
           //<Camra />
           // <VerifryScreen />
         }
