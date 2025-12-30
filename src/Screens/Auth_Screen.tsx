@@ -3,6 +3,7 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -10,8 +11,27 @@ import TextLayer1 from '../Components/TextLayer1.tsx';
 import TextLayer3 from '../Components/TextLayer3.tsx';
 import TextLayer2 from '../Components/TextLayer2.tsx';
 import VerificationActionButton from '../Components/VerificationActionButton.tsx';
+import ClockInPad from '../Components/ClockInPad.tsx';
+import { useState } from 'react';
+import { dayOrMorning, getCurrentTime } from '../Utilities/Utilities.ts';
 
-const AuthScreen: React.FC = () => {
+const AuthScreen: React.FC = (props) => {
+  const [password, setPassword] = useState<string>('')
+
+  const onPasswordChange = (currChar: string, deleteChar?: boolean): void => {
+    if (deleteChar) {
+      setPassword(password.slice(0, password.length - 1))
+    } else {
+      setPassword(password + currChar)
+    }
+    console.log(currChar, deleteChar)
+  }
+
+  const onNavigateToClockIn = () => {
+    console.log(props)
+    props.navigation.navigate("camera")
+  }
+  const timeDetails = getCurrentTime();
   return (
     <View style={styles.container}>
       <View >
@@ -23,32 +43,46 @@ const AuthScreen: React.FC = () => {
             />
           </View>
         </View>
-        <View style={{ marginVertical: 60 }}>
+
+        <View style={{ marginVertical: 20 }}>
           <View style={styles.layer}>
-            <TextLayer1 text={'Good Morning'} />
-          </View>
-          <View style={{ ...styles.layer, marginTop: 20 }}>
-            <TextLayer3 text={'Welcome back to the office'} />
+            <TextLayer1 text={dayOrMorning(timeDetails.split('^')[0])} />
           </View>
         </View>
-        <View style={{ ...styles.layer, gap: 10 }}>
-          <TextLayer2 text={'08:58 AM'} />
-          <TextLayer3 text="Mon, 22nd Dec" />
+
+
+        <View style={{ ...styles.layer }}>
+          <TextLayer2 text={timeDetails.split('^')[0]} />
+          <TextLayer3 text={timeDetails.split('^')[1]} />
         </View>
+
       </View>
 
-      <VerificationActionButton onPress={() => { console.log("This is a logging...") }} label={"Start Facial Pass"} />
-
+      <View style={{ marginVertical: 20, gap: 15 }}>
+        <View style={{ borderRadius: 10, padding: 0, marginHorizontal: 10 }}>
+          <TextInput
+            secureTextEntry={true}
+            readOnly={true}
+            value={password}
+            style={{
+              backgroundColor: 'white',
+              borderRadius: 10,
+              fontSize: 40,
+            }}
+            placeholder="Enter your ID" />
+        </View>
+        <ClockInPad onPasswordChange={onPasswordChange} />
+        <VerificationActionButton onPress={() => { onNavigateToClockIn() }} label={"Start Facial Pass"} />
+      </View>
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
     flex: 1,
     backgroundColor: '#132440',
-    paddingVertical: 40
+    paddingTop: 40
   },
   logoContainer: {
     width: '100%',
@@ -83,5 +117,4 @@ const styles = StyleSheet.create({
 
   }
 });
-
 export default AuthScreen;
