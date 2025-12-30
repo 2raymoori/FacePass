@@ -11,18 +11,16 @@ import TextLayer3 from './Components/TextLayer3.tsx';
 import VerificationActionButton from './Components/VerificationActionButton.tsx';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 
-const Camra = ()=>{
-
-
+const Camra = () => {
   const getBaseUrl = () => {
     if (Platform.OS === 'android') {
       //return 'http://10.0.2.2:8000'; // emulator
-       return 'http://192.168.0.104:8000'; // real device
+      return 'http://192.168.0.104:8000'; // real device
     }
     return 'http://localhost:8000'; // iOS
   };
 
-  const testConnection = async (backendUrl:string) => {
+  const testConnection = async (backendUrl: string) => {
     const url = getBaseUrl();
 
     try {
@@ -67,9 +65,9 @@ const Camra = ()=>{
     */
   };
 
-  useEffect(()=>{
+  useEffect(() => {
 
-    fetch('http://192.168.0.104:8000/health',{headers:{"Content-Type":"application/json","Accept":"application/json"}})
+    fetch('http://192.168.0.104:8000/health', { headers: { "Content-Type": "application/json", "Accept": "application/json" } })
 
       .then(() => {
         console.log('connection OK');
@@ -78,11 +76,12 @@ const Camra = ()=>{
         console.log(err);
       });
 
-    requestCameraPermission().then(() =>{
-    } ).catch(()=>{
-      console.log('Permissions denied')});
-    hasAndroidPermission().then(r => {}).catch(()=>{})
-  },[])
+    requestCameraPermission().then(() => {
+    }).catch(() => {
+      console.log('Permissions denied')
+    });
+    hasAndroidPermission().then(r => { }).catch(() => { })
+  }, [])
 
 
 
@@ -113,18 +112,18 @@ const Camra = ()=>{
   return (
     <View style={styles.mainContainer}>
       <View >
-        <View style={{marginBottom:40,marginTop:50}}>
+        <View style={{ marginBottom: 40, marginTop: 50 }}>
           <TextLayer2 text={'Verify Identity'} />
         </View>
 
-        <View style={{gap:15}}>
+        <View style={{ gap: 15 }}>
           <TextLayer1 text={'Position face in frame'} />
           <TextLayer3 text={'Make sure there is enough light'} />
         </View>
       </View>
 
       <View style={styles.cameraContainer}>
-        <Camera  style={styles.camera} device={device} isActive={true} photo={true} ref={camera} />
+        <Camera style={styles.camera} device={device} isActive={true} photo={true} ref={camera} />
       </View>
 
       <VerificationActionButton onPress={takePicture} label={'Clock In'} />
@@ -132,7 +131,7 @@ const Camra = ()=>{
   );
 }
 
-const uploadPhotoToBackend = async (photoPath:string, backendUrl:string) => {
+const uploadPhotoToBackend = async (photoPath: string, backendUrl: string) => {
   try {
     // Create FormData
     const formData = new FormData();
@@ -141,8 +140,8 @@ const uploadPhotoToBackend = async (photoPath:string, backendUrl:string) => {
     const filename = photoPath.split('/').pop();
 
     // Fix file path for Android
-    const cleanPath = Platform.OS === 'android' && !photoPath.startsWith('file://') 
-      ? `file://${photoPath}` 
+    const cleanPath = Platform.OS === 'android' && !photoPath.startsWith('file://')
+      ? `file://${photoPath}`
       : photoPath;
 
     // Append file to form data
@@ -194,7 +193,7 @@ async function requestCameraPermission() {
 
 async function hasAndroidPermission() {
   const getCheckPermissionPromise = () => {
-    if (Platform.OS !== 'ios'){
+    if (Platform.OS !== 'ios') {
       if (Platform.Version >= 33) {
         return Promise.all([
           PermissionsAndroid.check(
@@ -220,7 +219,7 @@ async function hasAndroidPermission() {
     return true;
   }
   const getRequestPermissionPromise = () => {
-    if(Platform.OS !== 'ios') {
+    if (Platform.OS !== 'ios') {
       if (Platform.Version >= 33) {
         return PermissionsAndroid.requestMultiple([
           PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
@@ -228,9 +227,9 @@ async function hasAndroidPermission() {
         ]).then(
           statuses =>
             statuses[PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES] ===
-              PermissionsAndroid.RESULTS.GRANTED &&
+            PermissionsAndroid.RESULTS.GRANTED &&
             statuses[PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO] ===
-              PermissionsAndroid.RESULTS.GRANTED,
+            PermissionsAndroid.RESULTS.GRANTED,
         );
       } else {
         return PermissionsAndroid.request(
@@ -248,15 +247,16 @@ async function hasAndroidPermission() {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
+    backgroundColor: '#132440',
     justifyContent: 'space-between',
     paddingBottom: 20,
   },
   cameraContainer: {
     justifyContent: 'center',
-    alignItems:"center",
-    height:500,
-    paddingHorizontal:50,
-},
+    alignItems: "center",
+    height: 500,
+    paddingHorizontal: 50,
+  },
   camera: {
     height: 300,
     width: "100%",
