@@ -28,9 +28,15 @@ const AuthScreen: React.FC = (props) => {
   }
 
   const onNavigateToClockIn = () => {
+    console.log(password)
+    const collectPassword = password;
+    setPassword('');
+    console.log("##############################################")
     console.log(props)
-    props.navigation.navigate("camera")
+    props.navigation.navigate("camera", { password: collectPassword })
+    //props.navigation.navigate("camera")
   }
+
   const timeDetails = getCurrentTime();
   return (
     <View style={styles.container}>

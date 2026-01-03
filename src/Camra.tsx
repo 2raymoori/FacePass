@@ -1,21 +1,27 @@
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import {
   Camera,
   useCameraDevice,
+  useCameraFormat,
 } from 'react-native-vision-camera';
 import { PermissionsAndroid, Platform } from 'react-native';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import TextLayer1 from './Components/TextLayer1.tsx';
 import TextLayer2 from './Components/TextLayer2.tsx';
 import TextLayer3 from './Components/TextLayer3.tsx';
 import VerificationActionButton from './Components/VerificationActionButton.tsx';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
+import { FontAwesome6 } from "@react-native-vector-icons/fontawesome6";
+import ImageAvatar from './Components/ImageAvatar.tsx';
+import { useIsFocused } from '@react-navigation/native';
 
-const Camra = () => {
+const Camra = (props) => {
+  //const [loading, setLoading] = useState(false);
+
   const getBaseUrl = () => {
     if (Platform.OS === 'android') {
       //return 'http://10.0.2.2:8000'; // emulator
-      return 'http://192.168.0.104:8000'; // real device
+      return 'http://192.168.0.105:8000'; // real device
     }
     return 'http://localhost:8000'; // iOS
   };
@@ -67,7 +73,7 @@ const Camra = () => {
 
   useEffect(() => {
 
-    fetch('http://192.168.0.104:8000/health', { headers: { "Content-Type": "application/json", "Accept": "application/json" } })
+    fetch('http://192.168.0.105:8000/health', { headers: { "Content-Type": "application/json", "Accept": "application/json" } })
 
       .then(() => {
         console.log('connection OK');
@@ -83,26 +89,80 @@ const Camra = () => {
     hasAndroidPermission().then(r => { }).catch(() => { })
   }, [])
 
-
-
-
   const camera = useRef<Camera>(null)
   const device = useCameraDevice('front');
+  const isFocused = useIsFocused()
+
 
   const takePicture = async () => {
+    //setLoading(true);
+    const loginTimeStamp = new Date();
+    const time_fragment = loginTimeStamp.toString().split(" ")
+    const loginDate = time_fragment[0] + " " + time_fragment[1] + " " + time_fragment[2]
+    const loginTime = time_fragment[4]
+
+    const userPassword = props.route.params.password;
+    console.log("##############################################")
+
     try {
       const photo = await camera.current.takePhoto();
       console.log('Photo path:', photo.path);
       const photoPath = photo.path;
-      await uploadPhotoToBackend(photoPath, 'http://192.168.0.104:8000');
+      const response = await uploadPhotoToBackend(photoPath, 'http://192.168.0.105:8000', userPassword);
+      if (response?.success) {
+        //setLoading(false);
+        // Success Screen 
+        props.navigation.navigate('success', { loginDate: loginDate, loginTime: loginTime, userDetails: response.user });
 
-      // Save to Camera Roll
-      const savedPhoto = await CameraRoll.save(photoPath, {
-        type: 'photo',
-        album: 'MyAppPhotos', // Optional: specify album name
-      });
+      } else {
+        //setLoading(false);
+        // Error Screen...
+        props.navigation.navigate('error');
+      }
+      console.log(response);
+      /*
+            // Save to Camera Roll
+            const savedPhoto = await CameraRoll.save(photoPath, {
+              type: 'photo',
+              album: 'MyAppPhotos', // Optional: specify album name
+            });
+      
+            console.log('Photo saved to gallery:', savedPhoto);
+      */
+      //return savedPhoto;
+    } catch (error) {
+      console.error('Error saving photo:', error.message);
+      console.error('Error saving photo:', error);
+      props.navigation.navigate('error');
+      //setLoading(false);
+    }
 
-      console.log('Photo saved to gallery:', savedPhoto);
+  };
+
+  const takePictureoldd = async () => {
+    try {
+      //setLoading(true);
+      const loginTimeStamp = new Date();
+      const time_fragment = loginTimeStamp.toString().split(" ")
+      const loginDate = time_fragment[0] + " " + time_fragment[1] + " " + time_fragment[2]
+      const loginTime = time_fragment[4]
+
+      const userPassword = props.route.params.password;
+      console.log("##############################################")
+
+      const photo = await camera.current.takePhoto();
+      console.log('Photo path:', photo.path);
+      const photoPath = photo.path;
+      await uploadPhotoToBackend(photoPath, 'http://192.168.0.105:8000', "811532");
+      /*
+            // Save to Camera Roll
+            const savedPhoto = await CameraRoll.save(photoPath, {
+              type: 'photo',
+              album: 'MyAppPhotos', // Optional: specify album name
+            });
+      
+            console.log('Photo saved to gallery:', savedPhoto);
+            */
       //return savedPhoto;
     } catch (error) {
       console.error('Error saving photo:', error);
@@ -111,6 +171,11 @@ const Camra = () => {
 
   return (
     <View style={styles.mainContainer}>
+      <Pressable onPress={() => { props.navigation.goBack() }} style={styles.backBtn}>
+
+
+        <FontAwesome6 name="arrow-left-long" color={'red'} iconStyle='solid' size={20} />
+      </Pressable>
       <View >
         <View style={{ marginBottom: 40, marginTop: 50 }}>
           <TextLayer2 text={'Verify Identity'} />
@@ -122,8 +187,10 @@ const Camra = () => {
         </View>
       </View>
 
+
       <View style={styles.cameraContainer}>
-        <Camera style={styles.camera} device={device} isActive={true} photo={true} ref={camera} />
+        <Camera style={styles.camera} device={device} isActive={isFocused} photo={true} ref={camera} />
+
       </View>
 
       <VerificationActionButton onPress={takePicture} label={'Clock In'} />
@@ -131,7 +198,7 @@ const Camra = () => {
   );
 }
 
-const uploadPhotoToBackend = async (photoPath: string, backendUrl: string) => {
+const uploadPhotoToBackend = async (photoPath: string, backendUrl: string, userPassword: string) => {
   try {
     // Create FormData
     const formData = new FormData();
@@ -153,7 +220,8 @@ const uploadPhotoToBackend = async (photoPath: string, backendUrl: string) => {
 
     // Optional: Add metadata
     formData.append('timestamp', new Date().toISOString());
-    formData.append('device', 'iPhone 12'); // You can get this from metadata
+    formData.append('device', 'This is '); // You can get this from metadata
+    formData.append('password', userPassword);
 
     // Upload to server
     const response = await fetch(`${backendUrl}/api/upload`, {
@@ -164,13 +232,14 @@ const uploadPhotoToBackend = async (photoPath: string, backendUrl: string) => {
     console.log(response)
 
     if (!response.ok) {
-      throw new Error(`Upload failed: ${response.status}`);
+      //throw new Error(`Upload failed: ${response.status}`);
+      //props.navigation.navigate('error');
     }
 
     return await response.json();
   } catch (error) {
-    console.error('Upload error:', error);
-    throw error;
+    //console.error('Upload error:', error);
+    //throw error;
   }
 };
 
@@ -187,9 +256,6 @@ async function requestCameraPermission() {
   );
   return granted === PermissionsAndroid.RESULTS.GRANTED;
 }
-
-
-
 
 async function hasAndroidPermission() {
   const getCheckPermissionPromise = () => {
@@ -245,6 +311,15 @@ async function hasAndroidPermission() {
 
 
 const styles = StyleSheet.create({
+  backBtn: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    zIndex: 1,
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: "40%",
+  },
   mainContainer: {
     flex: 1,
     backgroundColor: '#132440',

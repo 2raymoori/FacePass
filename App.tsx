@@ -30,6 +30,8 @@ function App() {
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="auth" component={AuthScreen} />
             <Stack.Screen name="camera" component={Camra} />
+            <Stack.Screen name="error" component={ErrorScreen} />
+            <Stack.Screen name="success" component={SuccessScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaView>

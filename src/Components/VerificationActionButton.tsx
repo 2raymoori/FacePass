@@ -3,12 +3,13 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 interface IVerificationActionButtonProps {
   label: string,
   onPress: () => void,
+  isLoading?: boolean,
 }
-const VerificationActionButton = ({label,onPress}:IVerificationActionButtonProps)=>{
+const VerificationActionButton = ({ label, onPress, isLoading }: IVerificationActionButtonProps) => {
   return (
     <View style={{ paddingHorizontal: 30 }}>
       <TouchableOpacity style={styles.scanBtn} onPress={onPress}>
-        <Text style={styles.scanBtnText}>{label}</Text>
+        <Text style={styles.scanBtnText}>{isLoading ? "Verifying Identity..." : label}</Text>
       </TouchableOpacity>
     </View>
   );
